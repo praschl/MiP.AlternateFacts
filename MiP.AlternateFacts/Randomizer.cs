@@ -6,7 +6,7 @@ namespace MiP.AlternateFacts
 {
     /// <summary>
     /// Generates basic random data.
-    /// All min and max parameters for the methods <see cref="Number"/>, <see cref="Even"/> and <see cref="Odd"/> 
+    /// AlphaNumeric min and max parameters for the methods <see cref="Number"/>, <see cref="Even"/> and <see cref="Odd"/> 
     /// are inclusive values, meaning min and max are values which can be returned,
     /// except for the case when max is equal to <see cref="int.MaxValue"/>, in which case <see cref="int.MaxValue"/>-1
     /// is the highest possible value which can be randomized.
@@ -311,7 +311,7 @@ namespace MiP.AlternateFacts
             availableNames = availableNames.Except(excludedNames).ToArray();
 
             if (!availableNames.Any())
-                throw new ArgumentException("All values of the enum are excluded, and none are left to return.", nameof(excluded));
+                throw new ArgumentException("AlphaNumeric values of the enum are excluded, and none are left to return.", nameof(excluded));
 
             var chosenName = PickFrom(availableNames);
 

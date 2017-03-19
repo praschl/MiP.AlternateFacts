@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace MiP.AlternateFacts
 {
-    public class CharacterRandomizer
+    public class TextRandomizer
     {
         private static readonly char[] AlphaNumericCharacters =
         {
@@ -24,25 +25,30 @@ namespace MiP.AlternateFacts
             'u', 'v', 'w', 'x', 'y', 'z'
         };
 
+        private static readonly StringTemplateSettings DefaultStringTemplateSettings = new StringTemplateSettings();
+
         private readonly Randomizer _randomizer;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="CharacterRandomizer"/> class.
+        /// Initializes a new instance of the <see cref="TextRandomizer"/> class.
         /// </summary>
-        public CharacterRandomizer()
+        public TextRandomizer()
         {
             _randomizer = new Randomizer();
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="CharacterRandomizer"/> class.
+        /// Initializes a new instance of the <see cref="TextRandomizer"/> class.
         /// </summary>
         /// <param name="randomizer">A randomizer to use for randomization.</param>
-        public CharacterRandomizer(Randomizer randomizer)
+        public TextRandomizer(Randomizer randomizer)
         {
-            _randomizer = randomizer ?? throw new ArgumentNullException(nameof(randomizer));
+            if (randomizer == null)
+                throw new ArgumentNullException(nameof(randomizer));
+
+            _randomizer = randomizer;
         }
-        
+
         /// <summary>
         /// Gets a random character between <paramref name="min"/> and <paramref name="max"/>.
         /// </summary>
@@ -71,9 +77,9 @@ namespace MiP.AlternateFacts
         /// Returns an alphanumeric character.
         /// </summary>
         /// <param name="alphaNums">Defines which kinds of alphanumerics to return.</param>
-        public char AlphaNumeric(AlphaNums alphaNums = AlphaNums.All)
+        public char AlphaNumeric(AlphaNums alphaNums = AlphaNums.AlphaNumeric)
         {
-            if ((alphaNums & AlphaNums.All) == 0)
+            if ((alphaNums & AlphaNums.AlphaNumeric) == 0)
                 throw new ArgumentOutOfRangeException(nameof(alphaNums), "alphaNums must be a valid value of the AlphaNums enum.");
 
             switch (alphaNums)
@@ -96,7 +102,7 @@ namespace MiP.AlternateFacts
                 case AlphaNums.Alpha:
                     return _randomizer.PickFrom(AlphaNumericCharacters, 10);
 
-                default: // Alpha.All
+                default: // Alpha.AlphaNumeric
                     return _randomizer.PickFrom(AlphaNumericCharacters);
             }
         }
@@ -106,12 +112,38 @@ namespace MiP.AlternateFacts
         /// </summary>
         /// <param name="alphaNums">Defines which kinds of alphanumerics to return.</param>
         /// <param name="count">Defines how many characters to return.</param>
-        public IEnumerable<char> AlphaNumerics(AlphaNums alphaNums = AlphaNums.All, int count = 4)
+        public IEnumerable<char> AlphaNumerics(AlphaNums alphaNums = AlphaNums.AlphaNumeric, int count = 4)
         {
             for (var i = 0; i < count; i++)
             {
                 yield return AlphaNumeric(alphaNums);
             }
+        }
+
+        /// <summary>
+        /// Replaces special characters in a template using the <paramref name="settings"/> for rules how to replace the characters.
+        /// </summary>
+        /// <param name="format">The string used as a template. Special characters in the string are replaced to produce a new random string from the template.</param>
+        /// <param name="settings">Defines rules on how to replace characters.</param>
+        /// <remarks>
+        /// The default replacements are
+        /// <code>
+        /// # ... Numeric
+        /// ? ... Alpha
+        /// * ... AlphaNumeric
+        /// N ... AlphaNumericUpper
+        /// n ... AlphaNumericLower
+        /// A ... AlphaUpper
+        /// a ... AlphaLower
+        /// </code>
+        /// </remarks>
+        public string StringFromTemplate(string format, StringTemplateSettings settings = null)
+        {
+            settings = settings ?? DefaultStringTemplateSettings;
+
+            var chars = format.SelectMany(c => settings.Replace(c, AlphaNumeric)).ToArray();
+
+            return new string(chars);
         }
     }
 }

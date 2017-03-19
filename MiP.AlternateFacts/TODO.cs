@@ -1,5 +1,13 @@
-﻿// replace format
-// DateTime
+﻿// DateTime
+// Between
+// Date
+// - RecentPast(hours=24), NearFuture(hours(24)
+// - Past - days, min, max
+// - Future - days, min, max
+// TimeSpan
+// Month
+// Weekday
+
 
 // add other locales
 
