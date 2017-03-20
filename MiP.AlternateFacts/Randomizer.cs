@@ -154,7 +154,7 @@ namespace MiP.AlternateFacts
         /// <param name="max">Highest <see cref="long"/> to return (inclusive upper bound).</param>
         public long Int64(long min = long.MinValue, long max = long.MaxValue)
         {
-            return (long)Math.Round(Math.Abs(Double() * (max - min)) + min);
+            return (long) Math.Round(Math.Abs(Double()*(max - min)) + min);
         }
 
         /// <summary>
@@ -234,7 +234,7 @@ namespace MiP.AlternateFacts
         /// <param name="max">Highest <see cref="byte"/> to return (inclusive upper bound).</param>
         public byte Byte(byte min = byte.MinValue, byte max = byte.MaxValue)
         {
-            return (byte)Number(min, max);
+            return (byte) Number(min, max);
         }
 
         /// <summary>
@@ -257,7 +257,7 @@ namespace MiP.AlternateFacts
         {
             return (sbyte) Number(min, max);
         }
-        
+
         // other
 
         /// <summary>
@@ -290,8 +290,24 @@ namespace MiP.AlternateFacts
             if (maxIndex >= items.Count) maxIndex = items.Count - 1;
             if (minIndex > maxIndex) throw new ArgumentOutOfRangeException(nameof(minIndex), "minIndex must not be equal to or greater than the number of items in the list.");
 
-            var number = Number(minIndex, maxIndex);
-            return items[number];
+            var index = Number(minIndex, maxIndex);
+            return items[index];
+        }
+
+        /// <summary>
+        /// Picks a random char from the given <paramref name="chars"/> string.
+        /// </summary>
+        /// <param name="chars">String to chose a character from.</param>
+        /// <param name="minIndex">Minimum index of returned char, must not be after the last.</param>
+        /// <param name="maxIndex">Maximum index of returned char, if greater than the index of the last char, it is set to the index of the last char.</param>
+        public char PickFrom(string chars, int minIndex = 0, int maxIndex = int.MaxValue)
+        {
+            if (string.IsNullOrEmpty(chars)) throw new ArgumentException("String of items must not be null or empty.", nameof(chars));
+            if (maxIndex > chars.Length) maxIndex = chars.Length - 1;
+            if (minIndex > maxIndex) throw new ArgumentOutOfRangeException(nameof(minIndex), "minIndex must not be equal to or greater than the length of the string.");
+
+            var index = Number(minIndex, maxIndex);
+            return chars[index];
         }
 
         /// <summary>

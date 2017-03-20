@@ -8,7 +8,7 @@ namespace MiP.AlternateFacts
     /// </summary>
     public class StringTemplateSettings
     {
-        private readonly Dictionary<char, AlphaNums> _replaceChars = new Dictionary<char, AlphaNums>();
+        private readonly Dictionary<char, string> _replaceChars = new Dictionary<char, string>();
 
         private readonly Dictionary<char, Func<string>> _replaceFuncs = new Dictionary<char, Func<string>>();
 
@@ -32,13 +32,13 @@ namespace MiP.AlternateFacts
         {
             if (useDefaults)
             {
-                _replaceChars['#'] = AlphaNums.Numeric;
-                _replaceChars['?'] = AlphaNums.Alpha;
-                _replaceChars['*'] = AlphaNums.AlphaNumeric;
-                _replaceChars['N'] = AlphaNums.AlphaNumericUpper;
-                _replaceChars['n'] = AlphaNums.AlphaNumericLower;
-                _replaceChars['A'] = AlphaNums.AlphaUpper;
-                _replaceChars['a'] = AlphaNums.AlphaLower;
+                _replaceChars['#'] = AlphaNum.Numeric;
+                _replaceChars['?'] = AlphaNum.Alpha;
+                _replaceChars['*'] = AlphaNum.AlphaNumeric;
+                _replaceChars['N'] = AlphaNum.AlphaNumericUpper;
+                _replaceChars['n'] = AlphaNum.AlphaNumericLower;
+                _replaceChars['A'] = AlphaNum.AlphaUpper;
+                _replaceChars['a'] = AlphaNum.AlphaLower;
             }
         }
 
@@ -57,13 +57,16 @@ namespace MiP.AlternateFacts
         }
 
         /// <summary>
-        /// Adds a rule to replace a character with a random alphanumeric character defined by <see cref="AlphaNums"/>.
+        /// Adds a rule to replace a character with a random from <paramref name="withOneOf"/>.
         /// </summary>
         /// <param name="replaceChar">The character to create the replacement rule for.</param>
-        /// <param name="alphaNums">Defines which alphanumeric characters may be a replacement.</param>
-        public StringTemplateSettings Replace(char replaceChar, AlphaNums alphaNums)
+        /// <param name="withOneOf">Defines which alphanumeric characters may be a replacement.</param>
+        public StringTemplateSettings Replace(char replaceChar, string withOneOf)
         {
-            _replaceChars[replaceChar] = alphaNums;
+            if (string.IsNullOrEmpty(withOneOf))
+                throw new ArgumentException("withOneOf must not be null or empty.");
+
+            _replaceChars[replaceChar] = withOneOf;
             return this;
         }
 
@@ -78,11 +81,11 @@ namespace MiP.AlternateFacts
             return this;
         }
 
-        internal IEnumerable<char> Replace(char replaceChar, Func<AlphaNums, char> alphaNumFunc)
+        internal IEnumerable<char> Replace(char replaceChar, Randomizer randomizer)
         {
             if (_replaceChars.ContainsKey(replaceChar))
             {
-                yield return alphaNumFunc(_replaceChars[replaceChar]);
+                yield return randomizer.PickFrom(_replaceChars[replaceChar]);
             }
 
             else if (_replaceFuncs.ContainsKey(replaceChar))

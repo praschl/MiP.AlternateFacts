@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace MiP.AlternateFacts.Tests
@@ -22,62 +23,7 @@ namespace MiP.AlternateFacts.Tests
             CanReturn(() => _randomizer.Char('a', 'd'), 'c');
             CanReturn(() => _randomizer.Char('a', 'd'), 'd');
         }
-
-        [TestMethod]
-        public void AlphaNumeric_Numeric()
-        {
-            CanReturn(() => _randomizer.AlphaNumeric(AlphaNums.Numeric), '0');
-            CanReturn(() => _randomizer.AlphaNumeric(AlphaNums.Numeric), '9');
-
-            NeverReturns(() => _randomizer.AlphaNumeric(AlphaNums.Numeric), 'a');
-            NeverReturns(() => _randomizer.AlphaNumeric(AlphaNums.Numeric), 'A');
-        }
-
-        [TestMethod]
-        public void AlphaNumeric_NumericUpper()
-        {
-            CanReturn(() => _randomizer.AlphaNumeric(AlphaNums.AlphaNumericUpper), '0');
-            CanReturn(() => _randomizer.AlphaNumeric(AlphaNums.AlphaNumericUpper), 'Z');
-
-            NeverReturns(() => _randomizer.AlphaNumeric(AlphaNums.AlphaNumericUpper), 'a');
-        }
-
-        [TestMethod]
-        public void AlphaNumeric_AlphaLower()
-        {
-            CanReturn(() => _randomizer.AlphaNumeric(AlphaNums.AlphaLower), 'a');
-            CanReturn(() => _randomizer.AlphaNumeric(AlphaNums.AlphaLower), 'z');
-
-            NeverReturns(() => _randomizer.AlphaNumeric(AlphaNums.AlphaLower), 'Z');
-            NeverReturns(() => _randomizer.AlphaNumeric(AlphaNums.AlphaLower), '9');
-        }
-
-        [TestMethod]
-        public void AlphaNumeric_AlphaUpper()
-        {
-            CanReturn(() => _randomizer.AlphaNumeric(AlphaNums.AlphaUpper), 'A');
-            CanReturn(() => _randomizer.AlphaNumeric(AlphaNums.AlphaUpper), 'Z');
-
-            NeverReturns(() => _randomizer.AlphaNumeric(AlphaNums.AlphaUpper), 'a');
-            NeverReturns(() => _randomizer.AlphaNumeric(AlphaNums.AlphaUpper), '9');
-        }
-
-        [TestMethod]
-        public void AlphaNumeric_Alpha()
-        {
-            CanReturn(() => _randomizer.AlphaNumeric(AlphaNums.Alpha), 'A');
-            CanReturn(() => _randomizer.AlphaNumeric(AlphaNums.Alpha), 'z');
-
-            NeverReturns(() => _randomizer.AlphaNumeric(AlphaNums.Alpha), '9');
-        }
-
-        [TestMethod]
-        public void AlphaNumeric_All()
-        {
-            CanReturn(() => _randomizer.AlphaNumeric(AlphaNums.AlphaNumeric), '0');
-            CanReturn(() => _randomizer.AlphaNumeric(AlphaNums.AlphaNumeric), 'z');
-        }
-
+        
         [TestMethod]
         public void StringFromTemplate_returns_suitable_Numeric()
         {
@@ -149,8 +95,8 @@ namespace MiP.AlternateFacts.Tests
         public void StringFromTemplate_replaces_other_chars()
         {
             var settings = new StringTemplateSettings(false)
-                .Replace('.', AlphaNums.Alpha)
-                .Replace('0', AlphaNums.Numeric);
+                .Replace('.', AlphaNum.Alpha)
+                .Replace('0', AlphaNum.Numeric);
 
             var fromTemplate = _randomizer.StringFromTemplate("...,000,Hello", settings);
 
@@ -170,6 +116,17 @@ namespace MiP.AlternateFacts.Tests
             var fromTemplate = _randomizer.StringFromTemplate("00,11", settings);
 
             Assert.AreEqual("AaaAaa,BbbBbb", fromTemplate);
+        }
+
+        [TestMethod]
+        public void String_returns_string_with_correct_length()
+        {
+            for (var i = 0; i < 100; i++)
+            {
+                var result = _randomizer.String(AlphaNum.AlphaNumeric,  10, 20);
+                Console.WriteLine(result);
+                Assert.IsTrue(result.Length >= 10 || result.Length <= 20, "String was not in expected range.");
+            }
         }
 
         private static void ContainsNothingBut(string fromTemplate, string allowedChars)

@@ -174,6 +174,13 @@ namespace MiP.AlternateFacts.Tests
         }
 
         [TestMethod]
+        public void PickFrom_returns_first_and_last_character()
+        {
+            CanReturn(() => _randomizer.PickFrom(AlphaNum.Numeric, 0, 10), '0');
+            CanReturn(() => _randomizer.PickFrom(AlphaNum.Numeric, 0, 10), '9');
+        }
+
+        [TestMethod]
         public void PickEnum_returns_first_and_last_value()
         {
             CanReturn(() => _randomizer.PickEnum<PickEnum>(), PickEnum.One);
