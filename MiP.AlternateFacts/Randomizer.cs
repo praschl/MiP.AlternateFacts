@@ -199,7 +199,7 @@ namespace MiP.AlternateFacts
         /// <param name="max">Highest <see cref="double"/> to return (inclusive upper bound).</param>
         public double Double(double min = 0.0, double max = 1.0d)
         {
-            // ReSharper disable CompareOfFloatsByEqualityOperator --  will work exactiyl for these cases.
+            // ReSharper disable CompareOfFloatsByEqualityOperator --  will work exactly for these cases.
             if (min == 0.0d && max == 1.0d)
                 return Random.NextDouble();
             // ReSharper restore CompareOfFloatsByEqualityOperator
@@ -303,7 +303,7 @@ namespace MiP.AlternateFacts
         public char PickFrom(string chars, int minIndex = 0, int maxIndex = int.MaxValue)
         {
             if (string.IsNullOrEmpty(chars)) throw new ArgumentException("String of items must not be null or empty.", nameof(chars));
-            if (maxIndex > chars.Length) maxIndex = chars.Length - 1;
+            if (maxIndex >= chars.Length) maxIndex = chars.Length - 1;
             if (minIndex > maxIndex) throw new ArgumentOutOfRangeException(nameof(minIndex), "minIndex must not be equal to or greater than the length of the string.");
 
             var index = Number(minIndex, maxIndex);
