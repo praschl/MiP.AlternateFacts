@@ -12,48 +12,43 @@ namespace MiP.AlternateFacts.Tests
         [TestMethod]
         public void Number_range_is_inclusive()
         {
-            CanReturn(() => _randomizer.Number(0, 10), 0);
-            CanReturn(() => _randomizer.Number(0, 10), 10);
+            CanReturn(() => _randomizer.Number(-10, 10), -10, 10);
         }
 
         [TestMethod]
-        public void Even_does_not_return_values_out_of_range()
+        public void Even_expected_values()
         {
-            NeverReturns(() => _randomizer.Even(0, 11), 12);
-            NeverReturns(() => _randomizer.Even(1, 10), 0);
+            CanReturn(() => _randomizer.Even(-5, 5), -4, -2, 0, 2, 4);
         }
 
         [TestMethod]
-        public void Even_does_not_return_odd_values()
+        public void Even_unexpected_values()
         {
-            NeverReturns(() => _randomizer.Even(0, 2), 1);
+            NeverReturns(() => _randomizer.Even(-6, 6), -7, -5, -3, -1, 1, 3, 5, 7);
         }
 
         [TestMethod]
-        public void Odd_does_not_return_values_out_of_range()
+        public void Odd_expected_values()
         {
-            NeverReturns(() => _randomizer.Odd(0, 10), 11);
-            NeverReturns(() => _randomizer.Odd(2, 10), 1);
+            CanReturn(() => _randomizer.Odd(-5, 5), -5, -3, -1, 1, 3, 5);
         }
 
         [TestMethod]
-        public void Odd_does_not_return_even_values()
+        public void Odd_unexpected_values()
         {
-            NeverReturns(() => _randomizer.Odd(1, 3), 2);
+            NeverReturns(() => _randomizer.Odd(-5, 5), -6, -4, -2, 0, 2, 4, 6);
         }
 
         [TestMethod]
-        public void Digit_range_is_inclusive()
+        public void Digit_expected_values()
         {
-            CanReturn(() => _randomizer.Digit(0, 9), 0);
-            CanReturn(() => _randomizer.Digit(0, 9), 9);
+            CanReturn(() => _randomizer.Digit(0, 9), 0, 1, 2, 3, 4, 5, 6, 7, 8, 9);
         }
 
         [TestMethod]
         public void Int32_range_is_inclusive()
         {
-            CanReturn(() => _randomizer.Int32(0, 10), 0);
-            CanReturn(() => _randomizer.Int32(0, 10), 10);
+            CanReturn(() => _randomizer.Int32(0, 10), 0, 10);
         }
 
         [TestMethod]
@@ -71,19 +66,17 @@ namespace MiP.AlternateFacts.Tests
         }
 
         [TestMethod]
-        public void Int64_can_return_int_MaxValue_and_MinValue()
+        public void Int64_can_return_long_near_MaxValue_and_MinValue()
         {
-            // seems maximum value cannot be returned atm... test is red
-            CanReturn(() => _randomizer.Int64(long.MaxValue - 10, long.MaxValue), long.MaxValue);
-            CanReturn(() => _randomizer.Int64(long.MinValue, long.MinValue + 10), long.MinValue);
+            ReturnsChecked(() => _randomizer.Int64(long.MaxValue - 10, long.MaxValue), x => x >= long.MaxValue - 10);
+            ReturnsChecked(() => _randomizer.Int64(long.MinValue, long.MinValue + 10), x => x <= long.MinValue + 10);
         }
 
         [TestMethod]
-        public void UInt64_can_return_uint_MaxValue_and_MinValue()
+        public void UInt64_can_return_ulong_near_MaxValue_and_MinValue()
         {
-            // seems maximum value cannot be returned atm... test is red
-            CanReturn(() => _randomizer.UInt64(ulong.MaxValue - 10, ulong.MaxValue), ulong.MaxValue);
-            CanReturn(() => _randomizer.UInt64(ulong.MinValue, ulong.MinValue + 10), ulong.MinValue);
+            ReturnsChecked(() => _randomizer.UInt64(ulong.MaxValue - 10, ulong.MaxValue), x => x >= ulong.MaxValue - 10);
+            ReturnsChecked(() => _randomizer.UInt64(ulong.MinValue, ulong.MinValue + 10), x => x <= ulong.MinValue + 10);
         }
 
         [TestMethod]
@@ -111,6 +104,12 @@ namespace MiP.AlternateFacts.Tests
         }
 
         [TestMethod]
+        public void Double_expected_values()
+        {
+            ReturnsChecked(() => _randomizer.Double(-100, 100), x => x >= -100 && x <= 100);
+        }
+
+        [TestMethod]
         public void Single_range_is_inclusive()
         {
             const float min = 0.9999999f;
@@ -121,6 +120,12 @@ namespace MiP.AlternateFacts.Tests
         }
 
         [TestMethod]
+        public void Single_expected_values()
+        {
+            ReturnsChecked(() => _randomizer.Single(-100, 100), x => x >= -100 && x <= 100);
+        }
+
+        [TestMethod]
         public void Decimal_range_is_inclusive()
         {
             const decimal min = 0.9999999999999999999999999999m;
@@ -128,6 +133,12 @@ namespace MiP.AlternateFacts.Tests
 
             CanReturn(() => _randomizer.Decimal(min, max), min);
             CanReturn(() => _randomizer.Decimal(min, max), max);
+        }
+        
+        [TestMethod]
+        public void Decimal_expected_values()
+        {
+            ReturnsChecked(() => _randomizer.Decimal(-100, 100), x => x >= -100 && x <= 100);
         }
 
         [TestMethod]
@@ -152,7 +163,7 @@ namespace MiP.AlternateFacts.Tests
         }
 
         [TestMethod]
-        public void boolean_returns_true_and_false()
+        public void Boolean_returns_true_and_false()
         {
             CanReturn(() => _randomizer.Boolean(), true);
             CanReturn(() => _randomizer.Boolean(), false);
@@ -165,26 +176,25 @@ namespace MiP.AlternateFacts.Tests
         }
 
         [TestMethod]
-        public void PickFrom_returns_first_and_last_value()
+        public void PickFrom_expected_values()
         {
             int[] list = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
 
-            CanReturn(() => _randomizer.PickFrom(list, 0, 9), 1);
-            CanReturn(() => _randomizer.PickFrom(list, 0, 9), 10);
+            CanReturn(() => _randomizer.PickFrom(list, 0, 9), 1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
         }
 
         [TestMethod]
         public void PickFrom_returns_first_and_last_character()
         {
-            CanReturn(() => _randomizer.PickFrom(AlphaNum.Numeric, 0, 10), '0');
-            CanReturn(() => _randomizer.PickFrom(AlphaNum.Numeric, 0, 10), '9');
+            CanReturn(() => _randomizer.PickFrom(Chars.Numeric, 0, 10), Chars.Numeric.ToArray());
         }
 
         [TestMethod]
         public void PickEnum_returns_first_and_last_value()
         {
-            CanReturn(() => _randomizer.PickEnum<PickEnum>(), PickEnum.One);
-            CanReturn(() => _randomizer.PickEnum<PickEnum>(), PickEnum.Ten);
+            CanReturn(() => _randomizer.PickEnum<PickEnum>(), 
+                PickEnum.One, PickEnum.Two, PickEnum.Three, PickEnum.Four, PickEnum.Five, 
+                PickEnum.Six, PickEnum.Seven, PickEnum.Eight, PickEnum.Nine, PickEnum.Ten);
         }
 
         [TestMethod]
@@ -200,7 +210,6 @@ namespace MiP.AlternateFacts.Tests
         private enum PickEnum
         {
             One,
-            // ReSharper disable UnusedMember.Local
             Two,
             Three,
             Four,
@@ -209,7 +218,6 @@ namespace MiP.AlternateFacts.Tests
             Seven,
             Eight,
             Nine,
-            // ReSharper restore UnusedMember.Local
             Ten
         }
     }

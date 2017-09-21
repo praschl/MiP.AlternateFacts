@@ -66,7 +66,8 @@ namespace MiP.AlternateFacts
         /// <remarks>
         /// This method can never return <see cref="int.MaxValue"/>.
         /// Use <see cref="Int32"/> to get a number which can also be <see cref="int.MaxValue"/>.
-        /// </remarks>        /// <param name="min">Lower inclusive bound of the number returned.</param>
+        /// </remarks>        
+        /// <param name="min">Lower inclusive bound of the number returned.</param>
         /// <param name="max">Upper inclusive bound of the number returned.</param>
         public int Even(int min = 0, int max = 1)
         {
@@ -94,7 +95,7 @@ namespace MiP.AlternateFacts
         {
             var result = Number(min, max);
 
-            if (result%2 == 1)
+            if (Math.Abs(result%2) == 1)
                 return result;
 
             if (result == min)
@@ -154,7 +155,8 @@ namespace MiP.AlternateFacts
         /// <param name="max">Highest <see cref="long"/> to return (inclusive upper bound).</param>
         public long Int64(long min = long.MinValue, long max = long.MaxValue)
         {
-            return (long) Math.Round(Math.Abs(Double()*(max - min)) + min);
+            var range = (decimal)max - min;
+            return Convert.ToInt64(Decimal() * range + min);
         }
 
         /// <summary>
@@ -165,7 +167,8 @@ namespace MiP.AlternateFacts
         /// <param name="max">Highest <see cref="ulong"/> to return (inclusive upper bound).</param>
         public ulong UInt64(ulong min = ulong.MinValue, ulong max = ulong.MaxValue)
         {
-            return (ulong) Math.Round(Double()*(max - min) + min);
+            var range = (decimal)max - min;
+            return Convert.ToUInt64(Decimal() * range + min);
         }
 
         /// <summary>
@@ -199,10 +202,9 @@ namespace MiP.AlternateFacts
         /// <param name="max">Highest <see cref="double"/> to return (inclusive upper bound).</param>
         public double Double(double min = 0.0, double max = 1.0d)
         {
-            // ReSharper disable CompareOfFloatsByEqualityOperator --  will work exactly for these cases.
+            // Comparison of doubles with equality operator (and without double.Epsilon) will work here.
             if (min == 0.0d && max == 1.0d)
                 return Random.NextDouble();
-            // ReSharper restore CompareOfFloatsByEqualityOperator
 
             return Random.NextDouble()*(max - min) + min;
         }

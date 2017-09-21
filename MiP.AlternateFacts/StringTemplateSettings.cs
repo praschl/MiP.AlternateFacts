@@ -32,13 +32,13 @@ namespace MiP.AlternateFacts
         {
             if (useDefaults)
             {
-                _replaceChars['#'] = AlphaNum.Numeric;
-                _replaceChars['?'] = AlphaNum.Alpha;
-                _replaceChars['*'] = AlphaNum.AlphaNumeric;
-                _replaceChars['N'] = AlphaNum.AlphaNumericUpper;
-                _replaceChars['n'] = AlphaNum.AlphaNumericLower;
-                _replaceChars['A'] = AlphaNum.AlphaUpper;
-                _replaceChars['a'] = AlphaNum.AlphaLower;
+                _replaceChars['#'] = Chars.Numeric;
+                _replaceChars['?'] = Chars.Alpha;
+                _replaceChars['*'] = Chars.AlphaNumeric;
+                _replaceChars['N'] = Chars.AlphaNumericUpper;
+                _replaceChars['n'] = Chars.AlphaNumericLower;
+                _replaceChars['A'] = Chars.AlphaUpper;
+                _replaceChars['a'] = Chars.AlphaLower;
             }
         }
 
@@ -52,6 +52,21 @@ namespace MiP.AlternateFacts
                 _replaceChars.Remove(charNotToReplace);
             if (_replaceFuncs.ContainsKey(charNotToReplace))
                 _replaceFuncs.Remove(charNotToReplace);
+
+            return this;
+        }
+
+        /// <summary>
+        /// Removes the character replacement rules for each character in <param name="charsNotToReplace" />. 
+        /// The character will not be replaced (and produce itself).
+        /// </summary>
+        /// <param name="charNotToReplace">The character to remove the replacement rule for.</param>
+        public StringTemplateSettings DoNotReplace(string charsNotToReplace)
+        {
+            foreach (char ch in charsNotToReplace)
+            {
+                DoNotReplace(ch);
+            }
 
             return this;
         }

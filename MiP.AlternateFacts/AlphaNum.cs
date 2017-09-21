@@ -3,7 +3,7 @@
     /// <summary>
     /// Table with string and character definitions.
     /// </summary>
-    public static class AlphaNum
+    public static class Chars
     {
         /// <summary>
         /// Defines numeric, upper and lower alpha characters.

@@ -77,13 +77,7 @@ namespace MiP.AlternateFacts.Tests
         public void StringFromTemplate_does_not_replace_removed_chars()
         {
             var settings = new StringTemplateSettings()
-                .DoNotReplace('#')
-                .DoNotReplace('?')
-                .DoNotReplace('*')
-                .DoNotReplace('a')
-                .DoNotReplace('A')
-                .DoNotReplace('n')
-                .DoNotReplace('N');
+                .DoNotReplace("#?*aAnN");
 
             const string template = "#?*aAnN";
             var fromTemplate = _randomizer.StringFromTemplate(template, settings);
@@ -95,8 +89,8 @@ namespace MiP.AlternateFacts.Tests
         public void StringFromTemplate_replaces_other_chars()
         {
             var settings = new StringTemplateSettings(false)
-                .Replace('.', AlphaNum.Alpha)
-                .Replace('0', AlphaNum.Numeric);
+                .Replace('.', Chars.Alpha)
+                .Replace('0', Chars.Numeric);
 
             var fromTemplate = _randomizer.StringFromTemplate("...,000,Hello", settings);
 
@@ -123,7 +117,7 @@ namespace MiP.AlternateFacts.Tests
         {
             for (var i = 0; i < 100; i++)
             {
-                var result = _randomizer.String(AlphaNum.AlphaNumeric,  10, 20);
+                var result = _randomizer.String(Chars.AlphaNumeric,  10, 20);
                 Console.WriteLine(result);
                 Assert.IsTrue(result.Length >= 10 || result.Length <= 20, "String was not in expected range.");
             }
