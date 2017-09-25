@@ -35,10 +35,6 @@ namespace MiP.AlternateFacts
                 _replaceChars['#'] = Chars.Numeric;
                 _replaceChars['?'] = Chars.Alpha;
                 _replaceChars['*'] = Chars.AlphaNumeric;
-                _replaceChars['N'] = Chars.AlphaNumericUpper;
-                _replaceChars['n'] = Chars.AlphaNumericLower;
-                _replaceChars['A'] = Chars.AlphaUpper;
-                _replaceChars['a'] = Chars.AlphaLower;
             }
         }
 

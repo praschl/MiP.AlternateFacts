@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Collections.Generic;
 
 namespace MiP.AlternateFacts.Tests
 {
@@ -23,7 +24,7 @@ namespace MiP.AlternateFacts.Tests
             CanReturn(() => _randomizer.Char('a', 'd'), 'c');
             CanReturn(() => _randomizer.Char('a', 'd'), 'd');
         }
-        
+
         [TestMethod]
         public void StringFromTemplate_returns_suitable_Numeric()
         {
@@ -74,6 +75,23 @@ namespace MiP.AlternateFacts.Tests
         }
 
         [TestMethod]
+        public void StringFromTemplate_can_return_all_characters()
+        {
+            var settings = new StringTemplateSettings(false)
+             .Replace('0', Chars.Numeric);
+
+            var fromTemplate = _randomizer.StringFromTemplate(new string('0', 1000), settings);
+
+            HashSet<char> chars = new HashSet<char>(new[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' });
+
+            var invalid = fromTemplate.Where(c => !chars.Contains(c)).Distinct().OrderBy(c => c).ToArray();
+
+            Console.WriteLine(fromTemplate);
+
+            Assert.AreEqual(0, invalid.Length, $"Invalid chars found: {string.Join(",", invalid)}");
+        }
+
+        [TestMethod]
         public void StringFromTemplate_does_not_replace_removed_chars()
         {
             var settings = new StringTemplateSettings()
@@ -117,7 +135,7 @@ namespace MiP.AlternateFacts.Tests
         {
             for (var i = 0; i < 100; i++)
             {
-                var result = _randomizer.String(Chars.AlphaNumeric,  10, 20);
+                var result = _randomizer.String(Chars.AlphaNumeric, 10, 20);
                 Console.WriteLine(result);
                 Assert.IsTrue(result.Length >= 10 || result.Length <= 20, "String was not in expected range.");
             }
