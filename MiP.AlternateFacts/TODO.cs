@@ -7,6 +7,8 @@
 // Month
 // Weekday
 
-// templates for named objects: new Template<string>().Named("ArticleNumber", r=>r.ReplaceChars("?#####-##")).Get("ArticleNumber")
+// templates for named objects:
+// r.Templates.Add("ArticleNumber", r=>r.ReplaceChars("?#####-##"));
+// later: r.Get("ArticleNumber");
 
-// create complex objects containing alternative facts with "new Trumped<T>().Generate()"
+// create complex objects containing alternative facts with "new Humbug<T>().TrumpUp()"
