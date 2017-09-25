@@ -8,13 +8,7 @@ namespace MiP.AlternateFacts.Tests
     public class RandomizerTest : RandomTest
     {
         private readonly Randomizer _randomizer = new Randomizer();
-
-        [TestMethod]
-        public void Number_range_is_inclusive()
-        {
-            CanReturn(() => _randomizer.Number(-10, 10), -10, 10);
-        }
-
+        
         [TestMethod]
         public void Even_expected_values()
         {
@@ -202,7 +196,7 @@ namespace MiP.AlternateFacts.Tests
         {
             int[] list = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
 
-            var shuffled = _randomizer.Shuffle(list).ToArray();
+            var shuffled = _randomizer.Collections.Shuffle(list).ToArray();
             CollectionAssert.AreEquivalent(list, shuffled);
             CollectionAssert.AreNotEqual(list, shuffled);
         }

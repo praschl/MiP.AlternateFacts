@@ -36,10 +36,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AlphaNum.cs" />
+    <Compile Include="CollectionsRandomizer.cs" />
     <Compile Include="TextRandomizer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Randomizer.cs" />
     <Compile Include="StringTemplateSettings.cs" />
+    <Compile Include="TimeSpanRandomizer.cs" />
     <Compile Include="TODO.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

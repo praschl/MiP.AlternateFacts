@@ -12,7 +12,7 @@ namespace MiP.AlternateFacts.Tests
         [TestInitialize]
         public void Initialize()
         {
-            _randomizer = new TextRandomizer();
+            _randomizer = new TextRandomizer(new Randomizer());
         }
 
         [TestMethod]

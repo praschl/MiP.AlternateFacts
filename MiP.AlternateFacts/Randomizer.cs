@@ -16,12 +16,22 @@ namespace MiP.AlternateFacts
     /// </remarks>
     public class Randomizer
     {
+        private Random _random;
+
+        private void Initialize(Random random)
+        {
+            _random = random;
+            Text = new TextRandomizer(this);
+            Collections = new CollectionsRandomizer(this);
+            Time = new TimeSpanRandomizer(this);
+        }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="Randomizer"/> class with a random seed.
         /// </summary>
         public Randomizer()
         {
-            Random = new Random();
+            Initialize(new Random());
         }
 
         /// <summary>
@@ -31,12 +41,10 @@ namespace MiP.AlternateFacts
         /// <param name="seed">Used to initialize the <see cref="System.Random"/> class.</param>
         public Randomizer(int seed)
         {
-            Random = new Random(seed);
+            Initialize(new Random(seed));
         }
 
         // integer numbers
-
-        internal Random Random { get; }
 
         /// <summary>
         /// Gets a random <see cref="int"/> between <paramref name="min"/> (inclusive lower bound) 
@@ -48,13 +56,13 @@ namespace MiP.AlternateFacts
         /// </remarks>
         /// <param name="min">Lower inclusive bound of the number returned.</param>
         /// <param name="max">Upper inclusive bound of the number returned.</param>
-        public int Number(int min = 0, int max = 1)
+        private int Number(int min, int max)
         {
             // make max a possible result, except when it is equal to int.MaxValue
             if (max < int.MaxValue)
                 max = max + 1;
 
-            var number = Random.Next(min, max);
+            var number = _random.Next(min, max);
 
             return number;
         }
@@ -69,7 +77,7 @@ namespace MiP.AlternateFacts
         /// </remarks>        
         /// <param name="min">Lower inclusive bound of the number returned.</param>
         /// <param name="max">Upper inclusive bound of the number returned.</param>
-        public int Even(int min = 0, int max = 1)
+        public int Even(int min = 0, int max = 99)
         {
             var result = Number(min, max);
 
@@ -91,7 +99,7 @@ namespace MiP.AlternateFacts
         /// Use <see cref="Int32"/> to get a number which can also be <see cref="int.MaxValue"/>.
         /// </remarks>        /// <param name="min">Lower inclusive bound of the number returned.</param>
         /// <param name="max">Upper inclusive bound of the number returned.</param>
-        public int Odd(int min = 0, int max = 1)
+        public int Odd(int min = 0, int max = 100)
         {
             var result = Number(min, max);
 
@@ -204,9 +212,9 @@ namespace MiP.AlternateFacts
         {
             // Comparison of doubles with equality operator (and without double.Epsilon) will work here.
             if (min == 0.0d && max == 1.0d)
-                return Random.NextDouble();
+                return _random.NextDouble();
 
-            return Random.NextDouble()*(max - min) + min;
+            return _random.NextDouble()*(max - min) + min;
         }
 
         /// <summary>
@@ -246,7 +254,7 @@ namespace MiP.AlternateFacts
         public byte[] Bytes(int count)
         {
             var result = new byte[count];
-            Random.NextBytes(result);
+            _random.NextBytes(result);
             return result;
         }
 
@@ -267,7 +275,7 @@ namespace MiP.AlternateFacts
         /// </summary>
         public bool Boolean()
         {
-            return Number() == 0;
+            return Number(0, 1) == 0;
         }
 
         /// <summary>
@@ -336,12 +344,10 @@ namespace MiP.AlternateFacts
             return (T) Enum.Parse(typeof(T), chosenName);
         }
 
-        /// <summary>
-        /// Shuffles an IEnumerable source.
-        /// </summary>
-        public IEnumerable<T> Shuffle<T>(IEnumerable<T> source)
-        {
-            return source.OrderBy(_ => Random.Next());
-        }
+        public TextRandomizer Text { get; private set; }
+        
+        public CollectionsRandomizer Collections { get; private set; }
+
+        public TimeSpanRandomizer Time { get; private set; }
     }
 }

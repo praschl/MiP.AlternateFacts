@@ -9,15 +9,7 @@ namespace MiP.AlternateFacts
         private static readonly StringTemplateSettings DefaultStringTemplateSettings = new StringTemplateSettings();
 
         private readonly Randomizer _randomizer;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="TextRandomizer"/> class.
-        /// </summary>
-        public TextRandomizer()
-        {
-            _randomizer = new Randomizer();
-        }
-
+        
         /// <summary>
         /// Initializes a new instance of the <see cref="TextRandomizer"/> class.
         /// </summary>
@@ -37,7 +29,7 @@ namespace MiP.AlternateFacts
         /// <param name="max">The highest char of the range to get (upper bound).</param>
         public char Char(char min = char.MinValue, char max = char.MaxValue)
         {
-            return (char) _randomizer.Random.Next(min, max + 1);
+            return (char)_randomizer.Int32(min, max);
         }
 
         /// <summary>

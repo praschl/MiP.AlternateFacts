@@ -52,6 +52,7 @@
     <Compile Include="RandomizerTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RandomTest.cs" />
+    <Compile Include="TimeSpanRandomizerTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
