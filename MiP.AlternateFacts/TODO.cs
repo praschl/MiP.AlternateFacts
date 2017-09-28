@@ -1,4 +1,8 @@
-﻿// DateTime
+// PickFrom overloads to allow picking more than one at a time, with a parameter 
+// - AllowRepeat.Never
+// - AllowRepeat.Always
+// - AllowRepeat.WhenNotEnoughItems
+// DateTime
 // Between
 // Date
 // - RecentPast(hours=24), NearFuture(hours(24)
